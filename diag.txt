@@ -1,0 +1,27 @@
++------------------+
+|   Main Program   |
+|------------------|
+| logger.Configure |
++------------------+
+          |
+          v
++------------------+
+|  logChan buffer  |  <-- buffered channel (size 100)
++------------------+
+          ^
+          |  (Log messages pushed here)
+          |
++------------------+      +---------------------------------------+
+|   logger.Log()   | ---> |          worker goroutine             |
+|------------------|      |---------------------------------------|
+| Creates Message  |      | for msg := range                      |
+| Adds Timestamp   |      | logChan {                             |
+| Pushes to channel|      |   for _, cfg in configs {             |
++------------------+      |       if msg.Level <= cfg.MinLevel {  |
+          |               |           cfg.Sink.Write(msg)         |
+          |               |       }                               |
+        |                 |    }                                  |
+          |               | }                                     |
+          |                +--------------------------------------+
+          v
+   (If logChan full → message dropped)
