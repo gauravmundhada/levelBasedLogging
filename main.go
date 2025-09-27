@@ -24,11 +24,14 @@ func main() {
 		Namespace: "main",
 	})
 
-	logger.Log(message.Message{
-		Content:   "logging in the file",
-		Level:     message.INFO,
-		Namespace: "main",
-	})
+	// Simulate multiple log entries for testing rotation
+	for i := 0; i < 101; i++ {
+		logger.Log(message.Message{
+			Content:   "logging in the file",
+			Level:     message.INFO,
+			Namespace: "main",
+		})
+	}
 
 	logger.Close()
 

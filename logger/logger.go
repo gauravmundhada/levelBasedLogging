@@ -16,7 +16,7 @@ var (
 func Configure(c []Config) {
 	configs = c      // this line will run every time Configure is called and overwrite previous configs (to avoid overwrite use append)
 	once.Do(func() { // this block will run only for the first time Configure is called
-		logChan = make(chan message.Message, 100) // buffered channel of size 100 -> 100 messages can be queued
+		logChan = make(chan message.Message, 200) // buffered channel of size 200 -> 200 messages can be queued
 		wg.Add(1)                                 // will wait for one goroutine
 		go worker()
 	})
