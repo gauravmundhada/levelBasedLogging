@@ -23,6 +23,11 @@ func NewFileSink(filePath string) *FileSink {
 }
 
 func (f *FileSink) Write(msg message.Message) error {
+	// check if rotation needed
+	if f.logCount > f.maxLogs {
+		f.rotateFile()
+	}
+
 	// open the file if not opened yet
 	if f.file == nil {
 		file, err := os.OpenFile(f.FilePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
@@ -47,10 +52,6 @@ func (f *FileSink) Write(msg message.Message) error {
 
 	f.logCount++
 
-	// check if rotation needed
-	if f.logCount > f.maxLogs {
-		f.rotateFile()
-	}
 	return nil
 }
 
